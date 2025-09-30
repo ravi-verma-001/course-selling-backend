@@ -14,9 +14,14 @@ app.use(express.json());
 
 // ✅ Allow frontend (3000) to access backend (5000)
 app.use(cors({
-  origin: "http://localhost:3000",   // allow only your frontend
+  origin: ["http://localhost:3000", "https://medbyacademy.com"],    // allow only your frontend
   credentials: true
 }));
+
+app.get("/", (req, res) => {
+  res.send("🚀 Backend Live on Render");
+});
+
 
 // ✅ import user routes
 const userRoutes = require("./routes/user");
