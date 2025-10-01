@@ -14,7 +14,8 @@ app.use(express.json());
 
 // ✅ Allow frontend (3000) to access backend (5000)
 app.use(cors({
-  origin: ["http://localhost:3000", "https://medbyacademy.com"],    // allow only your frontend
+  origin: ["http://localhost:3000", "https://medbyacademy.com" ,"https://gorgeous-tartufo-3c219f.netlify.app"],    // allow only your frontend
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 
