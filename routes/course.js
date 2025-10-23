@@ -24,25 +24,32 @@ router.post(
   upload.single("thumbnail"), // 🔑 FIELD NAME MUST MATCH
   async (req, res) => {
     try {
-      const { title, description, price, videos } = req.body;
+      const { title, description, price, videos, courseType } = req.body;
+
+      // Validation
+      if (!courseType || !["Fellowship", "Certificate"].includes(courseType)) {
+        return res.status(400).json({ error: "Invalid or missing course type" });
+      }
 
       const newCourse = new Course({
         title,
         description,
         price,
-       thumbnail: req.file ? `/uploads/${req.file.filename}` : null,
+        thumbnail: req.file ? `/uploads/${req.file.filename}` : null,
         videos: JSON.parse(videos), // string → array
+        courseType, // 👈 added field
         createdBy: req.user.id,
       });
 
       await newCourse.save();
-      res.json({ message: "Course uploaded successfully", course: newCourse });
+      res.json({ message: "✅ Course uploaded successfully", course: newCourse });
     } catch (err) {
       console.error("❌ Upload error:", err);
       res.status(500).json({ error: "Server error" });
     }
   }
 );
+
 
 // ✅ Get My Purchased Courses
 router.get("/my-courses", authMiddleware, async (req, res) => {
@@ -60,6 +67,27 @@ router.get("/my-courses", authMiddleware, async (req, res) => {
   }
 });
 
+// ✅ Get all Fellowship Courses
+router.get("/fellowship", async (req, res) => {
+  try {
+    const courses = await Course.find({ courseType: "Fellowship" }).sort({ createdAt: -1 });
+    res.json(courses);
+  } catch (err) {
+    console.error("Error fetching fellowship courses:", err);
+    res.status(500).send("Server error");
+  }
+});
+
+// ✅ Get all Certificate Courses
+router.get("/certificate", async (req, res) => {
+  try {
+    const courses = await Course.find({ courseType: "Certificate" }).sort({ createdAt: -1 });
+    res.json(courses);
+  } catch (err) {
+    console.error("Error fetching certificate courses:", err);
+    res.status(500).send("Server error");
+  }
+});
 
 // backend/routes/courses.js
 router.get("/:id", authMiddleware, async (req, res) => {

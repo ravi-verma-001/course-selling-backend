@@ -20,16 +20,24 @@ const CourseSchema = new mongoose.Schema(
       required: true,
     },
     purchasedCourses: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Course"
-    }
-  ],
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+      },
+    ],
     videos: [
       {
         type: String, // each element = video URL
       },
     ],
+
+    // 👇 Add this new field
+    courseType: {
+      type: String,
+      enum: ["Fellowship", "Certificate"], // only 2 allowed types
+      required: true,
+    },
+
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
