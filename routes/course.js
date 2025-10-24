@@ -31,11 +31,13 @@ router.post(
         return res.status(400).json({ error: "Invalid or missing course type" });
       }
 
+      const baseUrl = req.protocol + "://" + req.get("host");
+
       const newCourse = new Course({
         title,
         description,
         price,
-        thumbnail: req.file ? `/uploads/${req.file.filename}` : null,
+        thumbnail: req.file ? `${baseUrl}/uploads/${req.file.filename}` : null,
         videos: JSON.parse(videos), // string → array
         courseType, // 👈 added field
         createdBy: req.user.id,
@@ -55,7 +57,7 @@ router.post(
 router.get("/my-courses", authMiddleware, async (req, res) => {
   try {
     // user ko find karo
-    const user = await User.findById(req.user.id).populate("purchasedCourses"); 
+    const user = await User.findById(req.user.id).populate("purchasedCourses");
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
@@ -98,7 +100,7 @@ router.get("/:id", authMiddleware, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");
-  }     
+  }
 });
 
 
