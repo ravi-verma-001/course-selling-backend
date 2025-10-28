@@ -27,17 +27,33 @@ const getBaseUrl = (req) => {
   return `${req.protocol}://${host}`; // for localhost
 };
 
-// ✅ Upload new course
+// ✅ Upload new course (updated for all form fields)
 router.post(
   "/upload",
   authMiddleware,
   upload.single("thumbnail"),
   async (req, res) => {
     try {
-      const { title, description, price, videos, courseType } = req.body;
+      const {
+        title,
+        description,
+        price,
+        discount,
+        level,
+        expertise,
+        duration,
+        mode,
+        eligibility,
+        certificate,
+        enrollmentLink,
+        logoPlacement,
+        status,
+        videos,
+      } = req.body;
 
-      if (!courseType || !["Fellowship", "Certificate"].includes(courseType)) {
-        return res.status(400).json({ error: "Invalid or missing course type" });
+      // Basic validation
+      if (!title || !description || !price || !level || !expertise) {
+        return res.status(400).json({ error: "Please fill all required fields" });
       }
 
       const baseUrl = getBaseUrl(req);
@@ -46,20 +62,35 @@ router.post(
         title,
         description,
         price,
-        thumbnail: req.file ? `${baseUrl}/uploads/${req.file.filename}` : null,
+        discount: discount || 0,
+        level,
+        expertise,
+        duration,
+        mode,
+        eligibility,
+        certificate: certificate === "true" || certificate === true,
+        enrollmentLink,
+        logoPlacement,
+        status,
         videos: JSON.parse(videos || "[]"),
-        courseType,
+        thumbnail: req.file ? `${baseUrl}/uploads/${req.file.filename}` : null,
         createdBy: req.user.id,
       });
 
       await newCourse.save();
-      res.json({ message: "✅ Course uploaded successfully", course: newCourse });
+
+      res.json({
+        success: true,
+        message: "✅ Course uploaded successfully",
+        course: newCourse,
+      });
     } catch (err) {
       console.error("❌ Upload error:", err);
-      res.status(500).json({ error: "Server error" });
+      res.status(500).json({ error: "Server error", details: err.message });
     }
   }
 );
+
 
 // ✅ Get My Purchased Courses
 router.get("/my-courses", authMiddleware, async (req, res) => {

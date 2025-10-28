@@ -15,28 +15,69 @@ const CourseSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    discount: {
+      type: Number,
+      default: 0,
+    },
     thumbnail: {
       type: String, // store uploaded thumbnail URL or path
       required: true,
     },
-    purchasedCourses: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Course",
-      },
-    ],
     videos: [
       {
         type: String, // each element = video URL
       },
     ],
 
-    // 👇 Add this new field
-    courseType: {
+    // 🧩 Extra Fields Added (from your new upload form)
+    level: {
       type: String,
-      enum: ["Fellowship", "Certificate"], // only 2 allowed types
+      enum: ["Fellowship", "Certificate"],
       required: true,
     },
+    expertise: {
+      type: String,
+      enum: ["General Practitioner", "Physician", "Nursing", "Healthcare Provider"],
+      required: true,
+    },
+    duration: {
+      type: String, // e.g., "3 Months"
+      required: true,
+    },
+    mode: {
+      type: String,
+      enum: ["Online", "Hybrid", "Offline"],
+      required: true,
+    },
+    eligibility: {
+      type: String,
+      required: true,
+    },
+    certificate: {
+      type: Boolean,
+      default: false,
+    },
+    enrollmentLink: {
+      type: String,
+    },
+    logoPlacement: {
+      type: String,
+      enum: ["Top Left", "Center", "Custom"],
+      default: "Top Left",
+    },
+    status: {
+      type: String,
+      enum: ["Draft", "Published"],
+      default: "Draft",
+    },
+
+    // 👇 existing fields preserved
+    purchasedCourses: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+      },
+    ],
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
