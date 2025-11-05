@@ -19,10 +19,8 @@ const CourseSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    thumbnail: {
-      type: String, // store uploaded thumbnail URL or path
-      required: true,
-    },
+    thumbnail: { type: String, required: false, default: "" },
+
     videos: [
       {
         type: String, // each element = video URL

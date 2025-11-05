@@ -3,7 +3,6 @@ const dotenv = require("dotenv");
 const path = require("path");
 const connectDB = require("./config/db");
 const cors = require("cors");
-const helmet = require("helmet"); // ✅ add this line
 
 
 dotenv.config();
@@ -19,13 +18,6 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
-
-// ✅ Step 2: Add helmet policy for images
-app.use(
-  helmet.crossOriginResourcePolicy({
-    policy: "cross-origin", // 👈 this line fixes ORB blocking
-  })
-);
 
 app.get("/", (req, res) => {
   res.send("🚀 Backend Live on Render");
