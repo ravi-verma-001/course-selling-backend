@@ -1,9 +1,10 @@
 const User = require("../models/User");
 
-const adminAuth = async (req, res, next) => {
+// ✅ Middleware to verify if user is admin
+const verifyAdmin = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id);
-    if (user.role !== "admin") {
+    if (!user || user.role !== "admin") {
       return res.status(403).json({ message: "Access denied, admin only" });
     }
     next();
@@ -12,4 +13,5 @@ const adminAuth = async (req, res, next) => {
   }
 };
 
-module.exports = adminAuth;
+// ✅ Export as named function
+module.exports = { verifyAdmin };
