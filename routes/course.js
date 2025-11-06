@@ -495,4 +495,19 @@ router.put("/update/:id", verifyAdmin, async (req, res) => {
 });
 
 
+// ✅ DELETE COURSE (Admin only)
+router.delete("/delete/:id", verifyAdmin, async (req, res) => {
+  try {
+    const deleted = await Course.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+    res.json({ message: "Course deleted successfully" });
+  } catch (err) {
+    console.error("Delete error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 module.exports = router;
