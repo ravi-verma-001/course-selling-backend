@@ -306,7 +306,9 @@ const path = require("path");
 const Course = require("../models/Course");
 const authMiddleware = require("../middleware/auth");
 const User = require("../models/User");
-const verifyAdmin = require("../middleware/auth");
+// const verifyAdmin = require("../middleware/auth");
+const verifyAdmin = require("../middleware/verifyAdmin");
+
 const router = express.Router();
 
 // ✅ Base URL helper (Render / Local)
@@ -474,7 +476,7 @@ router.put("/update/:id", verifyAdmin, async (req, res) => {
         enrollmentLink,
         logoPlacement,
         status,
-        videos: JSON.parse(videos || "[]"),
+        videos: videos ? JSON.parse(videos) : [],
         thumbnail,
       },
       { new: true }
@@ -490,5 +492,6 @@ router.put("/update/:id", verifyAdmin, async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
+
 
 module.exports = router;
