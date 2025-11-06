@@ -440,7 +440,8 @@ router.get("/", async (req, res) => {
 
 
 // ✅ Update course by ID (Admin only)
-router.put("/update/:id", verifyAdmin, async (req, res) => {
+router.put("/update/:id", authMiddleware, async (req, res) => {
+
   try {
     const {
       title,
