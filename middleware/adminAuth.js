@@ -15,3 +15,5 @@ const verifyAdmin = async (req, res, next) => {
 
 // ✅ Export as named function
 module.exports = { verifyAdmin };
+
+
